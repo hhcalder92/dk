@@ -1,0 +1,16 @@
+#!/bin/bash
+# Atos Phoenix R&D CI Team
+# Cleanup docker
+
+if [[ $(whoami) != root ]]; then
+    echo -e "**** Must run as root"
+    exit 1
+fi
+
+DOCKER=$(which docker)
+echo -e "\n-> Stop ALL..."
+$DOCKER stop $($DOCKER ps -q) 2>/dev/null
+
+#/usr/local/bin/dkc
+dkc
+exit 0

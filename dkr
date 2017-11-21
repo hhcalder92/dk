@@ -1,0 +1,44 @@
+#!/bin/bash
+# quick hack to run containers 
+
+TO_RUN=$1
+VULN_CONTAINERS=(hackazon dvwa webgoat)
+# check list 
+
+printC(){ 
+	echo "Available vulnerable Containers"
+	for container in ${VULN_CONTAINERS[*]}
+	do
+		echo $container
+	done 
+}
+
+if [ ! -n "$1" ] ; then
+	echo "No container to run..\n"
+	printC 
+	exit 1
+fi
+
+# run server to hack
+
+case $TO_RUN in 
+hackazon)
+	echo "Running hakazon.. exposing 80"
+	docker run --name hackazon -d -p 80:80 mutzel/all-in-one-hackazon:postinstall supervisord -n
+	;;
+dvwa)
+        echo "Running dvwa.. exposing 80"
+        docker run --rm -d -p 80:80 vulnerables/web-dvwa
+	;;
+webgoat)
+        echo "Running webgoat.. exposing 8080"
+        docker run -d -p 8080:8080 webgoat/webgoat-8.0
+	;;
+*)
+	echo "Not Found"
+	printC
+esac 
+
+
+exit 0
+ 

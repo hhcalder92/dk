@@ -1,0 +1,21 @@
+#!/bin/bash
+# Atos Phoenix R&D CI Team
+# Cleanup docker
+
+if [[ $(whoami) != root ]]; then
+    echo -e "**** Must run as root"
+    exit 1
+fi
+
+DOCKER=$(which docker)
+echo -e "\n-> Clean..."
+$DOCKER rm $($DOCKER ps -aq) 2>/dev/null
+$DOCKER rmi $($DOCKER images | grep "^<none>" | awk "{print $3}") 2>/dev/null
+while IFS=$'\n' read -r x; do
+    cnt=($x); [[ ${cnt[4]} =~ day ]] && $DOCKER rmi ${cnt[2]} 2>/dev/null
+done < <($DOCKER images ci/*/* | grep -v "^REPOSITORY")
+
+echo -e "\n-> Show..."
+#/usr/local/bin/dk
+dk
+exit 0
